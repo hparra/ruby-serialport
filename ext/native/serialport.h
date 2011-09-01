@@ -67,6 +67,7 @@ struct line_signals
    #endif
 
 #else
+   #include <termios.h>
    #ifdef  CMSPAR
       #define SPACE  3
       #define MARK   4

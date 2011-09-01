@@ -327,6 +327,7 @@ VALUE sp_set_modem_params_impl(argc, argv, self)
       case ODD:
          params.c_cflag |= PARENB;
          params.c_cflag |= PARODD;
+         break;
 
 #ifdef CMSPAR
       case SPACE:
@@ -340,7 +341,7 @@ VALUE sp_set_modem_params_impl(argc, argv, self)
          params.c_cflag |= CMSPAR;
          params.c_cflag |= PARODD;
          break;
-#endif     break;
+#endif
 
       case NONE:
          params.c_cflag &= ~PARENB;
