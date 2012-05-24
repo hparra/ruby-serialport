@@ -7,9 +7,9 @@ begin
     gemspec.name = "serialport"
     gemspec.summary = "Library for using RS-232 serial ports."
     gemspec.description = "Ruby/SerialPort is a Ruby library that provides a class for using RS-232 serial ports."
-    gemspec.email = "hector@hectorparra.com"
-    gemspec.homepage = 'http://github.com/hparra/ruby-serialport/'
-    gemspec.authors = ['Guillaume Pierronnet', 'Alan Stern', 'Daniel E. Shipton', 'Tobin Richard', 'Hector Parra', 'Ryan C. Payne']
+    gemspec.email = "jens@ififelse.net"
+    gemspec.homepage = 'http://github.com/jens-a-e/ruby-serialport/'
+    gemspec.authors = ['Guillaume Pierronnet', 'Alan Stern', 'Daniel E. Shipton', 'Tobin Richard', 'Hector Parra', 'Ryan C. Payne','jens alexander ewald']
     gemspec.has_rdoc = true
     gemspec.extensions << 'ext/native/extconf.rb'
   end

@@ -4,6 +4,7 @@
  * Daniel E. Shipton <dshipton@redshiptechnologies.com>
  * Jonas Bähr <jonas.baehr@fs.ei.tum.de>
  * Ryan C. Payne <rpayne-oss@bullittsystems.com>
+ * Jens Alexander Ewald <jens@ififelse.net>
  *
  * This code is hereby licensed for public consumption under either the
  * GNU GPL v2 or greater.
@@ -33,6 +34,17 @@ static VALUE sp_create(class, _port)
 {
    return sp_create_impl(class, _port);
 }
+
+
+/*
+ *  List all available devices (ClassMethod, OS X only for now)
+ */
+static VALUE sp_listDevices(class)
+VALUE class;
+{
+    return sp_listDevices_impl(class);
+}
+
 
 /*
  * Configure the serial port. You can pass a hash or multiple values
@@ -443,6 +455,7 @@ void Init_serialport()
 
    cSerialPort = rb_define_class("SerialPort", rb_cIO);
    rb_define_singleton_method(cSerialPort, "create", sp_create, 1);
+   rb_define_singleton_method(cSerialPort, "listDevices", sp_listDevices, 0);
 
    rb_define_method(cSerialPort, "get_modem_params", sp_get_modem_params, 0);
    rb_define_method(cSerialPort, "set_modem_params", sp_set_modem_params, -1);
@@ -469,14 +482,14 @@ void Init_serialport()
 
    rb_define_method(cSerialPort, "signals", sp_signals, 0);
    rb_define_method(cSerialPort, "get_signals", sp_signals, 0);
-   rb_define_method(cSerialPort, "rts", sp_get_rts, 0);
+   rb_define_method(cSerialPort, "rts",  sp_get_rts, 0);
    rb_define_method(cSerialPort, "rts=", sp_set_rts, 1);
-   rb_define_method(cSerialPort, "dtr", sp_get_dtr, 0);
+   rb_define_method(cSerialPort, "dtr",  sp_get_dtr, 0);
    rb_define_method(cSerialPort, "dtr=", sp_set_dtr, 1);
-   rb_define_method(cSerialPort, "cts", sp_get_cts, 0);
-   rb_define_method(cSerialPort, "dsr", sp_get_dsr, 0);
-   rb_define_method(cSerialPort, "dcd", sp_get_dcd, 0);
-   rb_define_method(cSerialPort, "ri", sp_get_ri, 0);
+   rb_define_method(cSerialPort, "cts",  sp_get_cts, 0);
+   rb_define_method(cSerialPort, "dsr",  sp_get_dsr, 0);
+   rb_define_method(cSerialPort, "dcd",  sp_get_dcd, 0);
+   rb_define_method(cSerialPort, "ri",   sp_get_ri, 0);
 
    rb_define_const(cSerialPort, "NONE", INT2FIX(NONE));
    rb_define_const(cSerialPort, "HARD", INT2FIX(HARD));

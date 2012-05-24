@@ -1,5 +1,12 @@
 -----Ruby/SerialPort-----
 
+-- !Please Note! --
+
+This is an experimental version of the official ruby-serialport, found at http://rubygems.org/gems/serialport
+Use with care! Added listDevices to find available ports on the system.
+
+
+
 -- Description --
 
 Ruby/SerialPort is a Ruby library that provides a class for using
@@ -34,7 +41,7 @@ Ruby's copy of miniterm.c !
        NONE, HARD, SOFT, SPACE, MARK, EVEN, ODD -> anInteger
 
     ** Class methods **
-
+	  * listDevices() -> an Array of Hashes with ports found (OS X only, for now)
       * new(port_num [, modem_parameters]) -> aSerialPort
       * open(port_num [, modem_parameters]) -> aSerialPort
       * open(port_num [, modem_parameters]) {|aSerialPort| block} ->
@@ -155,3 +162,5 @@ Alan Stern <stern@rowland.harvard.edu>
 Tobin Richard <tobin.richard@gmail.com>
 Hector Parra <hector@hectorparra.com>
 Ryan C. Payne <rpayne-oss@bullittsystems.com>
+Jens Alexander Ewald <jens@ififelse.net>
+

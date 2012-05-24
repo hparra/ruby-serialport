@@ -1,4 +1,6 @@
-require "../serialport.so"
+#!/usr/bin/ruby
+require "rubygems"
+require "serialport"
 
 
 if ARGV.size < 4
@@ -8,7 +10,7 @@ EOF
   exit(1)
 end
 
-sp = SerialPort.new(ARGV[0].to_i, ARGV[1].to_i, ARGV[2].to_i, ARGV[3].to_i, SerialPort::NONE)
+sp = SerialPort.new(ARGV[0], ARGV[1].to_i, ARGV[2].to_i, ARGV[3].to_i, SerialPort::NONE)
 
 open("/dev/tty", "r+") { |tty|
   tty.sync = true

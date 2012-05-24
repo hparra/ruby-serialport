@@ -3,6 +3,7 @@
  * Alan Stern <stern@rowland.harvard.edu>
  * Daniel E. Shipton <dshipton@redshiptechnologies.com>
  * Ryan C. Payne <rpayne-oss@bullittsystems.com>
+ * Jens Alexander Ewald <jens@ififelse.net>
  *
  * This code is hereby licensed for public consumption under either the
  * GNU GPL v2 or greater.
@@ -28,6 +29,16 @@
 #include <errno.h>   /* Error number definitions */
 #include <termios.h> /* POSIX terminal control definitions */
 #include <sys/ioctl.h>
+
+
+// Include OS X serial specifics:
+#if defined(OS_DARWIN)
+#include <CoreFoundation/CoreFoundation.h>
+#include <IOKit/IOKitLib.h>
+#include <IOKit/serial/IOSerialKeys.h>
+#include <IOKit/IOBSD.h>
+#endif
+
 
 #ifdef CRTSCTS
 #define HAVE_FLOWCONTROL_HARD 1
@@ -160,6 +171,92 @@ VALUE sp_create_impl(class, _port)
    fp->mode = FMODE_READWRITE | FMODE_SYNC;
 
    return (VALUE) sp;
+}
+
+VALUE sp_listDevices_impl(class)
+    VALUE class;
+{
+    VALUE list;
+    list = rb_ary_new();
+#if defined(OS_DARWIN)
+    /**
+    * OS X serial stuff
+    */
+    kern_return_t kernResult; 
+    CFMutableDictionaryRef classesToMatch;
+    io_iterator_t portWalker;
+
+    // Serial devices are instances of class IOSerialBSDClient
+    classesToMatch = IOServiceMatching(kIOSerialBSDServiceValue);
+    if (classesToMatch != NULL) {
+        // All types:
+        CFDictionarySetValue(classesToMatch, CFSTR(kIOSerialBSDTypeKey), CFSTR(kIOSerialBSDAllTypes));
+
+        // Just RS-232 compliant devices...
+        // CFDictionarySetValue(classesToMatch, CFSTR(kIOSerialBSDTypeKey), CFSTR(kIOSerialBSDRS232Type));
+
+        kernResult = IOServiceGetMatchingServices(kIOMasterPortDefault, classesToMatch, &portWalker);    
+        if (kernResult == KERN_SUCCESS) {               
+            io_object_t port;
+            while ((port = IOIteratorNext(portWalker))!=0) {
+                /*
+                * Actual SerialPort Query
+                */
+                if (port != 0) {
+                    const int _info_length = 64;
+                    CFStringRef modemName   = (CFStringRef)IORegistryEntryCreateCFProperty(port, CFSTR(kIOTTYDeviceKey),     kCFAllocatorDefault, 0);
+                    CFStringRef cuPath      = (CFStringRef)IORegistryEntryCreateCFProperty(port, CFSTR(kIOCalloutDeviceKey), kCFAllocatorDefault, 0);
+                    CFStringRef ttyPath     = (CFStringRef)IORegistryEntryCreateCFProperty(port, CFSTR(kIODialinDeviceKey),  kCFAllocatorDefault, 0);
+                    CFStringRef serviceType = (CFStringRef)IORegistryEntryCreateCFProperty(port, CFSTR(kIOSerialBSDTypeKey), kCFAllocatorDefault, 0);
+
+                    if (modemName && cuPath && ttyPath && serviceType) {
+                        char modemNameCH   [_info_length];
+                        char cuPathCH      [_info_length];
+                        char ttyPathCH     [_info_length];
+                        char serviceTypeCH [_info_length];
+
+                        CFStringGetCString(modemName  , modemNameCH,   _info_length, kCFStringEncodingASCII);
+                        CFStringGetCString(cuPath     , cuPathCH,      _info_length, kCFStringEncodingASCII); 
+                        CFStringGetCString(ttyPath    , ttyPathCH,     _info_length, kCFStringEncodingASCII); 
+                        CFStringGetCString(serviceType, serviceTypeCH, _info_length, kCFStringEncodingASCII);
+
+                        #ifdef DEBUG
+                        fprintf(stdout,"***\nPortname: %s,\nCU.path: %s\nTTY.path: %s\nServiceType: %s\n***\n",
+                                modemNameCH,cuPathCH,ttyPathCH,serviceTypeCH );
+                        #endif
+
+                        VALUE hash = rb_hash_new();
+                        rb_hash_aset(hash, rb_str_new2("name"),
+                        rb_str_new2(modemNameCH));
+                        rb_hash_aset(hash, rb_str_new2("port"),
+                        rb_str_new2(cuPathCH));
+                        
+                        // Unix specific path types (use cu preferably)
+                        rb_hash_aset(hash, rb_str_new2("tty_path"),
+                        rb_str_new2(cuPathCH));
+                        
+                        rb_hash_aset(hash, rb_str_new2("cu_path"),
+                        rb_str_new2(ttyPathCH));
+
+                        // do have such thing on other unix flavors as well?
+                        rb_hash_aset(hash, rb_str_new2("service_type"),
+                        rb_str_new2(serviceTypeCH));
+
+                        rb_ary_push(list,hash);
+                    }
+                    CFRelease(modemName); CFRelease(cuPath); CFRelease(ttyPath); CFRelease(serviceType);
+                }
+            }
+            (void)IOObjectRelease(port);
+        } // else frintf(stdout,"IOServiceGetMatchingServices returned %d", kernResult);
+    } // else frintf(stdout,"IOServiceMatching returned a NULL dictionary.");
+
+    if (IOIteratorIsValid(portWalker)) (void)IOObjectRelease(portWalker);
+#endif
+
+    // Linux stuff goes here
+    
+    return rb_ary_dup(list);
 }
 
 VALUE sp_set_modem_params_impl(argc, argv, self)

@@ -3,6 +3,7 @@
  * Alan Stern <stern@rowland.harvard.edu>
  * Daniel E. Shipton <dshipton@redshiptechnologies.com>
  * Hector G. Parra <hector@hectorparra.com>
+ * Jens Alexander Ewald <jens@ififelse.net>
  *
  * This code is hereby licensed for public consumption under either the
  * GNU GPL v2 or greater.
@@ -162,6 +163,15 @@ VALUE RB_SERIAL_EXPORT sp_create_impl(class, _port)
 #endif
    return (VALUE) sp;
 }
+
+
+VALUE sp_listDevices_impl(class)
+    VALUE class;
+{
+    // nothing for now
+    return T_NIL;
+}
+
 
 VALUE RB_SERIAL_EXPORT sp_set_modem_params_impl(argc, argv, self)
    int argc;

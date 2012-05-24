@@ -1,3 +1,5 @@
+1.0.5 => 03/05/2011:	[NEW] [OSX] Listing of Devices is supported as ClassMethod (SerialPort.listDevices), returning an array of info hashes (still experimental!)
+
 1.0.4 => 07/17/2010:	[FIXED] [Windows] No longer restricted to specific bitrates
 						[FIXED] [Windows] Removed potentially insecure sprintf() use
 						[FIXED] [Windows] Workaround for rb_sys_fail not checking GetLastError()
