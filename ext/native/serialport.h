@@ -67,11 +67,18 @@ struct line_signals
    #endif
 
 #else
-   #define SPACE  0
-   #define MARK   0
+   #include <termios.h>
+   #ifdef  CMSPAR
+      #define SPACE  3
+      #define MARK   4
+   #else
+      #define SPACE  0
+      #define MARK   0
+   #endif
+
    #define EVEN   1
    #define ODD    2
-   
+
    #define RB_SERIAL_EXPORT
 #endif
 
