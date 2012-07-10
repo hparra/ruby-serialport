@@ -1,4 +1,5 @@
 require 'serialport.so'
+require 'serialport/version'
 
 class SerialPort
    private_class_method(:create)
@@ -37,7 +38,7 @@ class SerialPort
       if (block_given?)
         begin
            yield sp
-        ensure             
+        ensure
            sp.close
         end
         return nil
