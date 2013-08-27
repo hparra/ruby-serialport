@@ -42,11 +42,11 @@ Ruby's copy of miniterm.c !
 
         Optional modem_parameters:
 
-        baudrate -> anInteger: from 50 to 1000000, depends on platform.
+        baud -> anInteger: from 50 to 1000000, depends on platform.
 
-        databits -> anInteger: from 5 to 8 (4 is allowed on Windows)
+        data_bits -> anInteger: from 5 to 8 (4 is allowed on Windows)
 
-        stopbits -> anInteger: 1 or 2 (1.5 is not supported)
+        stop_bits -> anInteger: 1 or 2 (1.5 is not supported)
 
         parity -> anInteger: SerialPort::NONE, SerialPort::EVEN,
                   SerialPort::ODD, SerialPort::MARK, SerialPort::SPACE
