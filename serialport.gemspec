@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.name = "serialport"
   s.license = "GPL-2"
   s.version = SerialPort::VERSION
-  s.authors = ["Guillaume Pierronnet", "Alan Stern", "Daniel E. Shipton", "Tobin Richard", "Hector Parra", "Ryan C. Payne"]
+  s.authors = ["Guillaume Pierronnet", "Alan Stern", "Daniel E. Shipton", "Tobin Richard", "Hector Parra", "Ryan C. Payne", 'Aaron Ten Clay']
   s.summary = "Library for using RS-232 serial ports."
   s.description = "Ruby/SerialPort is a Ruby library that provides a class for using RS-232 serial ports."
   s.email = "hector@hectorparra.com"
