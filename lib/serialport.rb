@@ -1,5 +1,4 @@
 require 'serialport.so'
-require 'serialport/version'
 
 
 # This class is used for communication over a serial port.
