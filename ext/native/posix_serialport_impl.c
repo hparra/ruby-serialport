@@ -162,7 +162,7 @@ VALUE sp_create_impl(class, _port)
    params.c_lflag = 0;
    
    params.c_cflag |= CLOCAL | CREAD;
-   params.c_cflag &= ~HUPCL;
+   params.c_cflag &= ~(HUPCL | CRTSCTS);  // default not use RTS/CTS hw flow control
 
    if (tcsetattr(fd, TCSANOW, &params) == -1)
    {
